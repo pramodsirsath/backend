@@ -3,9 +3,9 @@ const router = express.Router();
 const messoff = require('../models/Messoff');
 const hostelfeedback = require('../models/Feedback');
 const messfeedback = require('../models/MessFeedback');
-const Complaint = require('../models/Complaint');  // Add the missing model import
-const HostelAllotment = require('../models/HostelAllotment');  // Add the missing model import
-const AuthModel = require('../models/AuthModel')
+const Complaint = require('../models/Complaint');
+const HostelAllotment = require('../models/HostelAllotment');
+const AuthModel = require('../models/AuthModel'); // Ensure this path is correct
 
 // Route to fetch mess off data
 router.get('/messoff', async (req, res) => {
@@ -20,22 +20,23 @@ router.get('/messoff', async (req, res) => {
   }
 });
 
-router.get('/getTotalCount',async (req, res) => {
+router.get('/getTotalCount', async (req, res) => {
   try {
     const totalCountStudents = await AuthModel.countDocuments();
     const totalComplaint = await Complaint.countDocuments();
-    const HostelAllotted = await HostelAllotment.find({alloted:true});
+    const HostelAllotted = await HostelAllotment.find({ alloted: true });
     if (!HostelAllotted) {
       return res.send({ message: 'No Data Found' });
-    } 
-    const HostelNotAllotted = await HostelAllotment.find({alloted:false});
-    
-    res.send({ totalComplaint, totalCountStudents, HostelAllotted:HostelAllotted.length, HostelNotAllotted:HostelNotAllotted.length });
+    }
+    const HostelNotAllotted = await HostelAllotment.find({ alloted: false });
+
+    res.send({ totalComplaint, totalCountStudents, HostelAllotted: HostelAllotted.length, HostelNotAllotted: HostelNotAllotted.length });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Internal server error" });
   }
-})
+});
+
 // Route to fetch hostel feedback data
 router.get('/hostelfeedback', async (req, res) => {
   try {
